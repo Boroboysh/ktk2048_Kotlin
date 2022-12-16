@@ -87,7 +87,7 @@ class MainView(context: Context) : View(context) {
             setBackgroundColor(resources.getColor(R.color.background))
             paint.isAntiAlias = true
         } catch (e: Exception) {
-            Log.e(TAG, "Error getting assets?", e)
+            Log.e(TAG, "Error assets", e)
         }
         setOnTouchListener(InputListener(this))
         game.newGame()
@@ -171,7 +171,6 @@ class MainView(context: Context) : View(context) {
         val eXScore = sXHighScore - textPaddingSize
         val sXScore = eXScore - textWidthScore
 
-        //Outputting high-scores box
         backgroundRectangle?.setBounds(sXHighScore, sYAll, eXHighScore, eYAll)
         backgroundRectangle?.draw(canvas)
         paint.textSize = titleTextSize
@@ -192,7 +191,6 @@ class MainView(context: Context) : View(context) {
         )
 
 
-        //Outputting scores box
         backgroundRectangle?.setBounds(sXScore, sYAll, eXScore, eYAll)
         backgroundRectangle?.draw(canvas)
         paint.textSize = titleTextSize
@@ -288,7 +286,6 @@ class MainView(context: Context) : View(context) {
         drawDrawable(canvas, backgroundRectangle, startingX, startingY, endingX, endingY)
     }
 
-    //Renders the set of 16 background squares.
     private fun drawBackgroundGrid(canvas: Canvas) {
         val backgroundCell: Drawable? =
             AppCompatResources.getDrawable(context, R.drawable.cell_rectangle)
@@ -541,7 +538,6 @@ class MainView(context: Context) : View(context) {
 
     private fun createOverlays() {
         val resources = resources
-        //Initialize overlays
         var bitmap: Bitmap =
             Bitmap.createBitmap(endingX - startingX, endingY - startingY, Bitmap.Config.ARGB_8888)
         var canvas = Canvas(bitmap)

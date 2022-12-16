@@ -15,8 +15,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.auth.api.signin.GoogleSignInResult
 import com.google.android.gms.games.Games
 import com.google.android.gms.games.GamesClient
-import com.zychimne.twozerofoureight.snapshot.SnapshotData
-import com.zychimne.twozerofoureight.snapshot.SnapshotManager
 
 class MainActivity : AppCompatActivity() {
     private var firstLoginAttempt = false
@@ -45,11 +43,6 @@ class MainActivity : AppCompatActivity() {
                         Games.getGamesClient(this@MainActivity, result.signInAccount!!)
                     view.let { client.setViewForPopups(it) }
                 }
-                SnapshotManager.loadSnapshot(this@MainActivity, object : SnapshotManager.Callback {
-                    override fun run(data: SnapshotData) {
-                        view.game.handleSnapshot(data)
-                    }
-                })
             }
         }
     }
@@ -123,7 +116,6 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         load()
-        signInToGoogle()
     }
 
     private fun load() {
@@ -154,38 +146,6 @@ class MainActivity : AppCompatActivity() {
         view.game.lastGameState = settings.getInt(UNDO_GAME_STATE, view.game.lastGameState)
     }
 
-    /**
-     * Signs into Google. Used for cloud saves.
-     */
-    private fun signInToGoogle() {
-        val settings: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
-        val noLoginPrompt: Boolean = settings.getBoolean(NO_LOGIN_PROMPT, false)
-        val signInOptions: GoogleSignInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
-            .build()
-        val signInClient: GoogleSignInClient = GoogleSignIn.getClient(this, signInOptions)
-        signInClient.silentSignIn()
-            .addOnCompleteListener(this
-            ) { task ->
-                if (!task.isSuccessful) {
-                    if (!firstLoginAttempt && !noLoginPrompt) {
-                        firstLoginAttempt = true
-                        resultLauncher.launch(signInClient.signInIntent)
-                    }
-                } else {
-                    println("Successfully logged into Google.")
-                    if (task.result != null) {
-                        val client: GamesClient =
-                            Games.getGamesClient(this@MainActivity, task.result)
-                        view.let { client.setViewForPopups(it) }
-                    }
-                    SnapshotManager.loadSnapshot(this@MainActivity, object : SnapshotManager.Callback {
-                        override fun run(data: SnapshotData) {
-                            view.game.handleSnapshot(data)
-                        }
-                    })
-                }
-            }
-    }
 
     companion object {
         private const val WIDTH = "width"

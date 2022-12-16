@@ -20,7 +20,7 @@ class AnimationCell(
     }
 
     val percentageDone: Double
-        get() = max(0.0, 1.0 * (timeElapsed - delayTime) / animationTime)
+        get() = max(0.0, 0.5 * (timeElapsed - delayTime) / animationTime)
     val isActive: Boolean
         get() = timeElapsed >= delayTime
 }

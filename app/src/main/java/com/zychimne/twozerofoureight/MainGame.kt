@@ -3,8 +3,6 @@ package com.zychimne.twozerofoureight
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.preference.PreferenceManager
-import com.zychimne.twozerofoureight.snapshot.SnapshotData
-import com.zychimne.twozerofoureight.snapshot.SnapshotManager
 import java.util.*
 import kotlin.math.max
 import kotlin.math.pow
@@ -91,18 +89,6 @@ class MainGame internal constructor(private val mContext: Context, private val m
         val editor: SharedPreferences.Editor = settings.edit()
         editor.putLong(HIGH_SCORE, highScore)
         editor.apply()
-        val data = SnapshotData(highScore)
-        SnapshotManager.saveSnapshot(mContext, data)
-    }
-
-    fun handleSnapshot(data: SnapshotData) {
-        highScore = max(data.highScore, highScore)
-        val settings: SharedPreferences = PreferenceManager.getDefaultSharedPreferences(mContext)
-        val editor: SharedPreferences.Editor = settings.edit()
-        editor.putLong(HIGH_SCORE, highScore)
-        editor.apply()
-        mView.invalidate()
-        println("Successfully loaded snapshot from Cloud Save: $highScore")
     }
 
     @JvmName("getHighScore1")
